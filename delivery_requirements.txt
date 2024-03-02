@@ -1,0 +1,94 @@
+Initially Mentioned Strategy :
+
+Id like to know if you can create a trading bot that fetches information from a list of 30 cryptocurrencies stored in an Excel file 
+and automatically makes purchases at market value on Binance. 
+After each purchase, the bot checks for the highest purchase value of each cryptocurrency 
+and creates a limit sell order with a percentage higher than the highest purchase value. 
+
+I would like the main program to have a graphical interface that allows me to 
+ - choose the amount in USDT for the purchase, 
+ - the percentage increase for the sale, 
+
+and to be able to perform cycles, such as repeating the purchase cycle with the trading bot every X minutes, 
+and I would like to be able to choose that time as well. 
+I also wanted the main program to call the bot as a function because it had to call a function first, 
+which already exists with the strategy to create the list in Excel. 
+The logic is that the main program repeats the cycle every X amount of time, and when the cycle is initiated, 
+it first calls a function to create the list (this function already exists), 
+and then calls the function of the trading bot to perform the purchases and sales. 
+
+Scheme mentioned Latest :
+
+Scheme:
+- First cycle:
+- Call the function to create the list in Excel.
+- Import the list of assets to trade from the Excel file into variable 1.
+- Wait for 5 minutes. (time entered in the GUI)
+- Call the function to create the list in Excel.
+- Import the list of assets to trade from the Excel file into variable 2.
+- Wait for 5 minutes. (time entered in the GUI)
+- Call the function to create the list in Excel.
+- Import the list of assets to trade from the Excel file into variable 3.
+- Wait for 5 minutes. (time entered in the GUI)
+- Enter the loop:
+- Call the function to create the list in Excel.
+- Check the balance in USDT in the Binance account.
+- Check the balance in BNB in the Binance account. (fees are paid in BNB)
+- If less than 40 USDT in BNB, buy 20 USDT of BNB (ensures a minimum balance of 40 USDT in BNB for fee payment)
+- Check and update the balance in USDT in the Binance account.
+- Use the list of coins in variable 1 to buy
+- Calculate the maximum number of transactions based on the available balance and the USDT value to be invested per coin.
+- Set the number of transactions (maximum of 30 or the maximum number allowed by the available balance at the time).
+- For each asset purchase:
+- Check if its not on the list of assets to avoid.
+- Check indicators, if not move on to the next asset.
+- Execute a market value purchase transaction.
+- Check the highest purchase value of the asset made in this purchase in the transaction history.
+- Create a limit sell order with a percentage, higher than the highest purchase value, defined in the user interface.
+- Move on to the next asset.
+- Save the content of variable 2 into variable 1.
+- Save the content of variable 3 into variable 2.
+- Import the list of assets to trade from the Excel file into variable 3.
+- Wait for 5 minutes (time entered in the GUI).
+- Restart the loop.
+
+
+1. Graphical User Interface (GUI):
+   - User settings:
+     - Value in USDT for purchase.
+     - Percentage increase for sale.
+     - Time interval to repeat the trading cycle.
+     - Type of cycles:
+       - Single cycle
+       - Repeat "x" times
+         - Number of repetitions.
+       - Continuous
+     - Idle Time between end of one cycle and start of next cycle in minutes.
+     - List of assets to avoid purchasing.
+     - Countdown timer showing the time remaining until the next cycle.
+     - Introduction of APIs.
+     - Comment log with errors, cycle numbers, etc.
+     - Log of coin purchases with date and purchase values, and creation of sell orders with values.
+     - Introduction of the path to the Excel file where the list of assets to be purchased will be imported.
+
+2. Function to Create List in Excel: (Already Exists)
+   - Receives the list of 30 assets.
+   - Saves this list in an Excel file.
+
+3. Trading Bot:
+   - Checks the balance in USDT in the Binance account.
+   - Calculates the maximum number of transactions based on the available balance and the USDT value to be invested per asset.
+   - Sets the number of transactions (maximum of 30 or the maximum number allowed by the available balance at the moment).
+   - Imports the list of assets to be traded from the Excel file.
+   - For each asset purchase:
+     - Check if it is not in the list of assets to avoid.
+     - Check two types of indicators.
+     - Executes a market value purchase transaction.
+     - Checks the highest purchase value of the asset made in this purchase in the transaction history.
+     - Creates a limit sell order with a percentage, higher than the highest purchase value, defined in the user interface.
+     - Moves on to the next asset.
+
+4. Main Program:
+   - Starts the trading cycle at each specified time interval.
+   - Calls the function to create the list in Excel.
+   - Calls the trading bot to execute purchases and sales.
